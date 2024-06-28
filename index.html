@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dino Game</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <div id="title">
+        <h1>T-Rex remake</h1>
+    </div>
+    <div id="mainDiv">
+        <canvas id="gameCanvas" width="1280" height="720">
+            Canvas context
+        </canvas>
+        <div id="everything">
+            <div id="inside">
+                <div id="personalS">
+                    <h3>Sesion statistic</h3>
+                    <p id="bestScore">Best score: none</p>
+                    <p id="time">Session time: </p>
+                </div>
+                <div>
+                    <h3>Music settings</h3>
+                        <input type="radio" id="basic" name="music" value="BASIC" checked="checked">
+                        <label for="basic">Basic music</label><br>
+                        <input type="radio" id="arcade" name="music" value="ARCADE">
+                        <label for="arcade">Arcade music</label><br>
+                        <input type="radio" id="calm" name="music" value="CALM">
+                        <label for="calm">Calm music</label><br>
+                        <input type="range" id="volume" name="music" min="0" max="100" value="100"/>
+                        <label for="volume">Volume</label><br>
+                        <button id="setButton">Play music</button>
+                        <button id="stopMusic">Stop music</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="index.js"></script>
+</body>
+</html>

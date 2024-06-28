@@ -1,0 +1,40 @@
+#gameCanvas{
+    border: 1px solid black;
+}
+
+#mainDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#inside{
+    background-color: #98c1d9;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+#time{
+    width: 150px;
+}
+#everything{
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#inside div{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #e0fbfc;
+    color: black;
+}
+#title{
+    display: flex;
+    justify-content: center;
+}
+#setButton{
+    margin-top: 5px;
+    margin-left: 5px;
+}
