@@ -43,6 +43,9 @@ let points = 0;
 let bestS = 0;
 let pointsTier = 50;
 let status = 1;
+let lastTime = Date.now();
+let frames = 0;
+let FPS = 0;
 
 let generatingEnemy = false;
 
@@ -52,8 +55,16 @@ let speed = 0;
 
 let enemyArray = [];
 
+function deltaTime(){
+    let currentTime = Date.now();
+    let deltaTime = Math.abs(currentTime - lastTime)/10;
+    lastTime = currentTime;
+    console.log(deltaTime);
+    speed *= deltaTime;
+}
+window.setInterval(updateFPS, 1000);
 function draw(){
-    console.log(speed);
+    frames++;
     ctx.clearRect(0, 0, width, height);
     animate();
     for(let i = 0; i<Math.floor(speed);i++){
@@ -82,6 +93,11 @@ function draw(){
         , x);
     }
     updatePoints();
+}
+
+function updateFPS(){
+    FPS = frames;
+    frames = 0;
 }
 
 function startGame(){
@@ -226,6 +242,8 @@ function drawMap(){
         pointsString = "0" + pointsString;
     }
     ctx.fillText(pointsString, 1140, 50);
+    ctx.font = "24px Serif";
+    ctx.fillText("FPS: "+FPS, 20, 40);
 }
 
 function drawEnemy(){
