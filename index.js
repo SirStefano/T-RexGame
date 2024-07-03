@@ -90,7 +90,8 @@ stopButton.onclick = function () {
 volumeButton.onchange = function (){
     changeVolume(volumeButton.value);
 }
-volumeButton.addEventListener("keydown", function(){
+
+volumeButton.addEventListener("keydown", function(event){
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
     }
