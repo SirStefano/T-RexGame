@@ -1,4 +1,4 @@
-import {startGame, collisionCheck, crouching, draw, jump, running, lose, playMusic, stopMusic} from "./JSComp/Draw.js";
+import {startGame, collisionCheck, crouching, draw, jump, running, lose, playMusic, stopMusic, changeVolume} from "./JSComp/Draw.js";
 let gameRun = false;
 let isCrouching = false;
 let bestScore = document.getElementById("bestScore");
@@ -6,6 +6,7 @@ let time = document.getElementById("time");
 const startTime = Date.now();
 let setButton = document.getElementById("setButton");
 let stopButton = document.getElementById("stopMusic");
+let volumeButton = document.getElementById("volume");
 
 window.onload = animation();
 
@@ -22,7 +23,13 @@ window.setInterval(function(){
 
 function gameStart(){
     gameRun = true;
-    startGame();
+    if(document.getElementById("easy").checked){
+        startGame(0.5, 0.2);
+    }else if(document.getElementById("medium").checked){
+        startGame(1, 0.5);
+    }else if(document.getElementById("hard").checked){
+        startGame(1.5, 1);
+    }
 }
 
 function animation(){
@@ -79,6 +86,25 @@ setButton.onclick = function (){
 stopButton.onclick = function () {
     stopMusic();
 }
+
+volumeButton.onchange = function (){
+    changeVolume(volumeButton.value);
+}
+volumeButton.addEventListener("keydown", function(){
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+    }
+});
+
+const radioButtons = document.querySelectorAll('input[type="radio"]');
+
+radioButtons.forEach(function (radioButton) {
+    radioButton.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            event.preventDefault();
+        }
+    });
+});
 
 
 

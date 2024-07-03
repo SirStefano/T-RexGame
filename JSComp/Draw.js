@@ -23,6 +23,7 @@ const music2 = new Audio("./Assets/Sounds/music2.mp3");
 const music3 = new Audio("./Assets/Sounds/music3.mp3");
 let currentMusic = music1;
 currentMusic.loop = true;
+const achievementAudio = new Audio("./Assets/Sounds/achievementSound.mp3");
 
 const width = canvas.width, height = canvas.height;
 let startingImage = 0;
@@ -43,34 +44,33 @@ let points = 0;
 let bestS = 0;
 let pointsTier = 50;
 let status = 1;
-let lastTime = Date.now();
 let frames = 0;
-let FPS = 0;
+let FPS = 60;
+let correctionOfFPS = 1;
 
 let generatingEnemy = false;
 
 let jumpCounter = 0;
 
 let speed = 0;
+let speedStep = 0.5;
 
 let enemyArray = [];
 
-function deltaTime(){
-    let currentTime = Date.now();
-    let deltaTime = Math.abs(currentTime - lastTime)/10;
-    lastTime = currentTime;
-    console.log(deltaTime);
-    speed *= deltaTime;
+function speedCorection(){
+    correctionOfFPS = (165/FPS).toFixed(2);
 }
+
 window.setInterval(updateFPS, 1000);
 function draw(){
+    speedCorection();
     frames++;
     ctx.clearRect(0, 0, width, height);
     animate();
-    for(let i = 0; i<Math.floor(speed);i++){
+    for(let i = 0; i<Math.floor(speed*correctionOfFPS);i++){
         jumpEngine();
     }
-    jumpCounter += speed - Math.floor(speed);
+    jumpCounter += speed*correctionOfFPS - Math.floor(speed*correctionOfFPS);
     if(jumpCounter >= 1){
         jumpEngine();
         jumpCounter = 0;
@@ -100,14 +100,15 @@ function updateFPS(){
     frames = 0;
 }
 
-function startGame(){
+function startGame(_speed, _speedStep){
     y = 0;
     jumpCounter = 0;
     isJumping = 0;
     enemyArray = [];
     points = 0;
     running();
-    speed = 1;
+    speed = _speed;
+    speedStep = _speedStep;
     status = 3;
     pointsTier = 50;
 }
@@ -128,6 +129,10 @@ function playMusic(newMusic, volumeLetter){
     }
     currentMusic.volume = volumeLetter/100;
     currentMusic.play();
+}
+
+function changeVolume(volumeLetter){
+    currentMusic.volume = volumeLetter/100;
 }
 
 function stopMusic(){
@@ -164,10 +169,17 @@ function collisionCheck(){
 }
 
 function updatePoints(){
-    points += speed/20;
+    points += speed*correctionOfFPS/20;
     if(points>pointsTier*2){
+        achievementAudio.play();
         pointsTier = Math.floor(points);
-        speed += 0.5;
+        for(let i = 1; i<=5; ++i){
+            setTimeout(function (){
+                if(speed!==0){
+                    speed += speedStep/5;
+                }
+            }, 200*i);
+        }
     }
 }
 
@@ -180,13 +192,13 @@ function drawStartScreen(){
     if(UIstepInfo>=30.99){
         UIstepInfo = 0;
     }else{
-        UIstepInfo += 0.05;
+        UIstepInfo += 0.05*correctionOfFPS;
     }
     ctx.fillText(UItext.slice(0, Math.floor(UIstepInfo)), width/2-200, 100);
     if(UIstep>=1.99){
         UIstep = 0;
     }else{
-        UIstep += 0.005;
+        UIstep += 0.005*correctionOfFPS;
     }
     if(Math.floor(UIstep) === 0){
         ctx.drawImage(keyBoard, 80, 81, 80, 15, width/2-100, 340, 160, 30);
@@ -259,33 +271,31 @@ function drawEnemy(){
             }else if(element.type===2){
                 ctx.drawImage(penguin, 96-Math.floor(element.enemyStep)*32, 0, 32, 32, element.x, height/2+45, 80, 80);
             }
-            element.x -= 2 * speed;
+            element.x -= 2 * speed * correctionOfFPS;
         });
     }
 }
 
 function animate(){
-    if(animationStep >= stepMax-0.01){
+    if(animationStep >= stepMax-0.1){
         animationStep = 0;
     }else{
-        animationStep += step;
+        animationStep += step*correctionOfFPS;
     }
     if(animationStepBackground >= width){
-        animationStepBackground = 0;
-    }else{
-        animationStepBackground += speed;
+        animationStepBackground -= width;
     }
+    animationStepBackground += speed*correctionOfFPS;
     if(animationStepFloor>=200){
-        animationStepFloor = 0;
-    }else{
-        animationStepFloor += speed;
+        animationStepFloor -= 200;
     }
+    animationStepFloor += speed*correctionOfFPS;
     if(enemyArray.length>0){
         enemyArray.forEach(element => {
-            if(element.enemyStep >= element.enemyStepMax-0.01){
+            if(element.enemyStep >= element.enemyStepMax-0.1){
                 element.enemyStep = 0;
             }else{
-                element.enemyStep += step;
+                element.enemyStep += step*correctionOfFPS;
             }
         });
     }
@@ -338,7 +348,6 @@ function basicPose(){
 
 function generateEnemy(){
     let type = Math.floor(Math.random() * 3);
-    console.log(type);
     let enemy;
     if(type === 0) {
         enemy = new Enemy(type, width, true, 80, 4, 10);
@@ -369,4 +378,4 @@ class Enemy {
     }
 }
 
-export {draw, jump, running, crouching, collisionCheck, startGame, lose, playMusic, stopMusic};
+export {draw, jump, running, crouching, collisionCheck, startGame, lose, playMusic, stopMusic, changeVolume};
