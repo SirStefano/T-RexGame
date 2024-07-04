@@ -1,4 +1,4 @@
-import {startGame, collisionCheck, crouching, draw, jump, running, lose, playMusic, stopMusic, changeVolume} from "./JSComp/Draw.js";
+import {startGame, collisionCheck, crouching, draw, jump, running, lose, playMusic, stopMusic, changeVolume, getStatus} from "./JSComp/Draw.js";
 let gameRun = false;
 let isCrouching = false;
 let bestScore = document.getElementById("bestScore");
@@ -7,6 +7,7 @@ const startTime = Date.now();
 let setButton = document.getElementById("setButton");
 let stopButton = document.getElementById("stopMusic");
 let volumeButton = document.getElementById("volume");
+let focus = true;
 
 window.onload = animation();
 
@@ -33,7 +34,7 @@ function gameStart(){
 }
 
 function animation(){
-    if(gameRun && collisionCheck()){
+    if (gameRun && collisionCheck()) {
         let bestS = lose();
         bestScore.innerHTML = "Best score: " + Math.floor(bestS);
         gameRun = false;
@@ -48,6 +49,7 @@ window.addEventListener('keydown', function(event) {
         case 32: //space
             if(gameRun){
                 jump();
+                isCrouching = false;
             }else{
                 gameStart();
             }
@@ -59,6 +61,7 @@ window.addEventListener('keydown', function(event) {
             }
             break;
     }
+    event.preventDefault();
 });
 
 window.addEventListener('keyup', function(event) {
@@ -105,6 +108,16 @@ radioButtons.forEach(function (radioButton) {
             event.preventDefault();
         }
     });
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        if(getStatus()===3){
+            let bestS = lose();
+            bestScore.innerHTML = "Best score: " + Math.floor(bestS);
+            gameRun = false;
+        }
+    }
 });
 
 

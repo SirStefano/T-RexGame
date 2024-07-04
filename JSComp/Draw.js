@@ -92,7 +92,9 @@ function draw(){
             }
         , x);
     }
-    updatePoints();
+    if(speed>0){
+        updatePoints();
+    }
 }
 
 function updateFPS(){
@@ -225,7 +227,7 @@ function drawPlayAgain(){
     ctx.closePath();
     ctx.fillStyle = "white";
     ctx.font = "36px Serif";
-    ctx.fillText("Good game", width/2-80, 150);
+    ctx.fillText("Game Over", width/2-80, 150);
     ctx.font = "24px Serif";
     ctx.fillText("Your score:", width/2-50, 190);
     ctx.font = "20px Serif";
@@ -282,22 +284,25 @@ function animate(){
     }else{
         animationStep += step*correctionOfFPS;
     }
-    if(animationStepBackground >= width){
-        animationStepBackground -= width;
-    }
-    animationStepBackground += speed*correctionOfFPS;
-    if(animationStepFloor>=200){
-        animationStepFloor -= 200;
-    }
-    animationStepFloor += speed*correctionOfFPS;
-    if(enemyArray.length>0){
-        enemyArray.forEach(element => {
-            if(element.enemyStep >= element.enemyStepMax-0.1){
-                element.enemyStep = 0;
-            }else{
-                element.enemyStep += step*correctionOfFPS;
-            }
-        });
+    if(speed>0) {
+        if (animationStepBackground >= width) {
+            animationStepBackground -= width;
+        }
+        animationStepBackground += speed * correctionOfFPS;
+        if (animationStepFloor >= 200) {
+            animationStepFloor -= 200;
+        }
+        animationStepFloor += speed * correctionOfFPS;
+
+        if (enemyArray.length > 0) {
+            enemyArray.forEach(element => {
+                if (element.enemyStep >= element.enemyStepMax - 0.1) {
+                    element.enemyStep = 0;
+                } else {
+                    element.enemyStep += step * correctionOfFPS;
+                }
+            });
+        }
     }
 }
 
@@ -309,7 +314,6 @@ function jump(){
         animationStep = 0;
         stepMax = 3;
         isJumping = true;
-        crouch = false;
     }
 }
 
@@ -321,7 +325,11 @@ function jumpEngine(){
             y = 0;
             isJumping = false;
             gravitySpeed = 0;
-            running();
+            if(crouch===true){
+                crouching();
+            }else{
+                running();
+            }
         }
     }
 }
@@ -334,10 +342,12 @@ function running(){
 }
 
 function crouching(){
-    startingImage = 408;
-    animationStep = 0;
-    stepMax = 6;
     crouch = true;
+    if(!isJumping){
+        startingImage = 408;
+        animationStep = 0;
+        stepMax = 6;
+    }
 }
 
 function basicPose(){
@@ -378,4 +388,9 @@ class Enemy {
     }
 }
 
-export {draw, jump, running, crouching, collisionCheck, startGame, lose, playMusic, stopMusic, changeVolume};
+function getStatus(){
+    return status;
+}
+
+
+export {draw, jump, running, crouching, collisionCheck, startGame, lose, playMusic, stopMusic, changeVolume, getStatus};
