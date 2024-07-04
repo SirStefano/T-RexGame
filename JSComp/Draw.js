@@ -1,9 +1,17 @@
 let canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-const spriteCharacter = new Image();
+const characterBlue = new Image();
+characterBlue.src = "./Assets/Images/mainCharacter/DinoBlue.png";
+const characterGreen = new Image();
+characterGreen.src = "./Assets/Images/mainCharacter/DinoGreen.png";
+const characterRed = new Image();
+characterRed.src = "./Assets/Images/mainCharacter/DinoRed.png";
+const characterYellow = new Image();
+characterYellow.src = "./Assets/Images/mainCharacter/DinoYellow.png";
+let spriteCharacter = new Image();
+spriteCharacter = characterBlue;
 spriteCharacter.onload = drawCharacter;
-spriteCharacter.src = "./Assets/Images/mainCharacter/Dino.png";
 const background = new Image();
 background.src = "./Assets/Images/Terrain/Background/mountains.png";
 const floor = new Image();
@@ -105,7 +113,8 @@ function updateFPS(){
 function startGame(_speed, _speedStep){
     y = 0;
     jumpCounter = 0;
-    isJumping = 0;
+    isJumping = false;
+    gravitySpeed = 0;
     enemyArray = [];
     points = 0;
     running();
@@ -179,6 +188,7 @@ function updatePoints(){
             setTimeout(function (){
                 if(speed!==0){
                     speed += speedStep/5;
+                    jumpAudio.playbackRate = speed;
                 }
             }, 200*i);
         }
@@ -308,7 +318,6 @@ function animate(){
 
 function jump(){
     if(!isJumping){
-        jumpAudio.playbackRate = speed;
         jumpAudio.play();
         startingImage = 240;
         animationStep = 0;
@@ -369,6 +378,18 @@ function generateEnemy(){
     enemyArray.push(enemy);
 }
 
+function changeCharacterColor(colorNum){
+    if(colorNum===1){
+        spriteCharacter = characterBlue;
+    }else if(colorNum===2){
+        spriteCharacter = characterGreen;
+    }else if(colorNum===3){
+        spriteCharacter = characterRed;
+    }else if(colorNum===4){
+        spriteCharacter = characterYellow;
+    }
+}
+
 class Enemy {
     type;
     x;
@@ -393,4 +414,4 @@ function getStatus(){
 }
 
 
-export {draw, jump, running, crouching, collisionCheck, startGame, lose, playMusic, stopMusic, changeVolume, getStatus};
+export {draw, jump, running, crouching, collisionCheck, startGame, lose, playMusic, stopMusic, changeVolume, getStatus, changeCharacterColor};

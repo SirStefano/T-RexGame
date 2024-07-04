@@ -1,4 +1,4 @@
-import {startGame, collisionCheck, crouching, draw, jump, running, lose, playMusic, stopMusic, changeVolume, getStatus} from "./JSComp/Draw.js";
+import {startGame, collisionCheck, crouching, draw, jump, running, lose, playMusic, stopMusic, changeVolume, getStatus, changeCharacterColor} from "./JSComp/Draw.js";
 let gameRun = false;
 let isCrouching = false;
 let bestScore = document.getElementById("bestScore");
@@ -7,6 +7,7 @@ const startTime = Date.now();
 let setButton = document.getElementById("setButton");
 let stopButton = document.getElementById("stopMusic");
 let volumeButton = document.getElementById("volume");
+let setColor = document.getElementById("setColor");
 let focus = true;
 
 window.onload = animation();
@@ -119,6 +120,20 @@ document.addEventListener("visibilitychange", () => {
         }
     }
 });
+
+setColor.onclick = function (){
+    let colorNum;
+    if(document.getElementById("blue").checked){
+        colorNum = 1;
+    }else if(document.getElementById("green").checked){
+        colorNum = 2;
+    }else if(document.getElementById("red").checked){
+        colorNum = 3;
+    }else if(document.getElementById("yellow").checked){
+        colorNum = 4;
+    }
+    changeCharacterColor(colorNum);
+}
 
 
 
